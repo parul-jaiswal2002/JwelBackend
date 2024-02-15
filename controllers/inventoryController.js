@@ -34,8 +34,21 @@ const editInventory = async (req, res) => {
     res.status(200).json(inventory)
 }
 
+const deleteInventory = async (req, res) => {
+    const {id} = req.params
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(404).json({error : "No Such Id"})
+    }
+    const inventory = await Inventory.findByIdAndDelete({_id : id})
+    if(!inventory){
+        return res.status(404).json({error : "No such Inventory"})
+    }
+    res.status(200).json(inventory)
+}
+
 module.exports = {
     getAllInventory,
     addInventory,
-    editInventory
+    editInventory,
+    deleteInventory
 }

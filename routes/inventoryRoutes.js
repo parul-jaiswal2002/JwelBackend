@@ -9,4 +9,6 @@ router.post("/", addInventory);
 
 router.put("/:id", editInventory);
 
+router.delete('/:id', deleteInventory)
+
 module.exports = router;
