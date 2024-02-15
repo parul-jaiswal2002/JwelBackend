@@ -34,6 +34,7 @@ const editInventory = async (req, res) => {
     res.status(200).json(inventory)
 }
 
+//delete one inventory
 const deleteInventory = async (req, res) => {
     const {id} = req.params
     if(!mongoose.Types.ObjectId.isValid(id)){
@@ -46,9 +47,41 @@ const deleteInventory = async (req, res) => {
     res.status(200).json(inventory)
 }
 
+
+const searchInventories = async (req, res) => {
+    const query = req.query.q; // Get the search query from request parameters
+
+    try {
+        // Fetch inventory data from your API
+        const response = await Inventory.find({});
+
+        // Perform the search
+        const results = response.filter(inventory => {
+            // Check if the query matches any of the fields in the inventory
+            return (
+                inventory.item.toLowerCase().includes(query.toLowerCase()) ||
+                inventory.itemCode.toLowerCase().includes(query.toLowerCase()) ||
+                inventory.dia1.toString().includes(query) ||
+                inventory.dia2.toString().includes(query) ||
+                inventory.col1.toLowerCase().includes(query.toLowerCase()) ||
+                inventory.col2.toLowerCase().includes(query.toLowerCase()) ||
+                inventory.gold.toLowerCase().includes(query.toLowerCase()) ||
+                inventory.gw.toString().includes(query)
+            );
+        });
+
+        // Return the search results
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching inventory data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports = {
     getAllInventory,
     addInventory,
     editInventory,
-    deleteInventory
+    deleteInventory,
+    searchInventories
 }
