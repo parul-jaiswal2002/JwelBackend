@@ -1,4 +1,5 @@
-const User = require('../models/userModel')
+const LoginUser = require('../models/login')
+const SignupUser = require('../models/signup')
 const jwt = require('jsonwebtoken')
 
 
@@ -10,8 +11,9 @@ const createToken = (_id) => {
 //for login
 const loginUser = async (req,res) => {
     const {email, password} = req.body
+    console.log(email,password)
     try {
-        const user = await User.login(email,password)
+        const user = await LoginUser.login(email,password)
         
         //create token
         const token = createToken(user._id)
@@ -25,10 +27,11 @@ const loginUser = async (req,res) => {
 
 //for sign up
 const signUpUser = async (req, res) => {
-    const {email, password } = req.body;
-    console.log(email, password)
+    const {firstName, lastName, companyName, gst,email, password, cpassword } = req.body;
+
+    console.log(firstName, lastName, companyName,gst,email,password,cpassword)
     try {
-       const user = await User.signup(email,password)
+       const user = await SignupUser.signup(firstName, lastName, companyName, gst,email, password, cpassword)
 
        //create token
        const token = createToken(user._id)
