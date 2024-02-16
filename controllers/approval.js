@@ -35,20 +35,23 @@ const createApproval = async (req, res) => {
              
             };
         }));
-        console.log(productsWithDetails)
+         
+        const totalPrice = productsWithDetails.reduce((total, product) => total + product.priceNumber, 0);
+
         // Create a new approval object with products containing additional details
         const newApproval = new Approval({
             partyName,
             gst,
             through,
-            products: productsWithDetails // Array of products with productName, priceNumber, and additional details
+            products: productsWithDetails, // Array of products with productName, priceNumber, and additional details
+            totalPrice
         });
 
         // Save the new approval to the database
         await newApproval.save();
 
         // Return a success response
-        res.status(201).json({ message: 'Approval created successfully', newApproval });
+        res.status(201).json({ message: 'Approval created successfully', newApproval, totalPrice });
     } catch (error) {
         // If an error occurs, return an error response
         console.error(error);

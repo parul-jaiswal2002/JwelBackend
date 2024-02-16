@@ -46,7 +46,10 @@ const approvalSchema = new Schema({
         type: String,
         required: true
     },
-    products: [productSchema] // Array of products
+    products: [productSchema], // Array of products
+    totalPrice : {
+        type : Number
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Approval', approvalSchema);
