@@ -9,6 +9,7 @@ const allowedItemCodes = require('./routes/allowedValues/allowedItemCodes')
 const allowedDia1 = require('./routes/allowedValues/allowedDia1')
 const allowedDia2 = require('./routes/allowedValues/allowedDia2')
 const allowedGW = require('./routes/allowedValues/allowedGW')
+const approvalRouter = require('./routes/approval')
 
 //express app
 const app = express()
@@ -35,3 +36,4 @@ app.use('/api/inventory/allowed-itemCodes', allowedItemCodes);
 app.use('/api/inventory/allowed-Dia1', allowedDia1);
 app.use('/api/inventory/allowed-Dia2', allowedDia2);
 app.use('/api/inventory/allowed-GW', allowedGW);
+app.use('/api/approval', approvalRouter)
