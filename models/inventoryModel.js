@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const AllowedItems = require('../models/allowedValues/allowedItems')
-const AllowedItemCodes = require('../models/allowedValues/allowedItemCodes')
 const AllowedDia1 = require('../models/allowedValues/allowedDia1')
 const AllowedDia2 = require('../models/allowedValues/allowedDia2')
 const AllowedGW = require('../models/allowedValues/allowedGW')
@@ -21,35 +20,35 @@ const inventorySchema = new Schema({
     },
     
     itemCode : {
-        type: String,
+            type: String,
             required: true,
+            unique :true,
+    },
+    dia1: {
+        value : {
+            type: Number,
             validate: {
                 validator: async function(value) {
-                    const allowedValues = await AllowedItemCodes.find({}, 'value');
+                    const allowedValues = await AllowedDia1.find({}, 'value');
                     return allowedValues.map(item => item.value).includes(value);
                 },
                 message: props => `${props.value} is not a valid value for item!`
-            }
-    },
-    dia1: {
-        type: Number,
-        validate: {
-            validator: async function(value) {
-                const allowedValues = await AllowedDia1.find({}, 'value');
-                return allowedValues.map(item => item.value).includes(value);
             },
-            message: props => `${props.value} is not a valid value for item!`
-        }
+        },
+        rate : Number
     },
     dia2: {
-        type: Number,
-        validate: {
-            validator: async function(value) {
-                const allowedValues = await AllowedDia2.find({}, 'value');
-                return allowedValues.map(item => item.value).includes(value);
+        value : {
+            type: Number,
+            validate: {
+                validator: async function(value) {
+                    const allowedValues = await AllowedDia2.find({}, 'value');
+                    return allowedValues.map(item => item.value).includes(value);
+                },
+                message: props => `${props.value} is not a valid value for item!`
             },
-            message: props => `${props.value} is not a valid value for item!`
-        }
+        },
+        rate : Number
     },
     col1 : {
         type: String,
@@ -69,6 +68,14 @@ const inventorySchema = new Schema({
             message: props => `${props.value} is not a valid value for dia1!`
         },
     },
+    col1W : {
+       weight : String,
+       rate : Number
+    },
+    col2W : {
+       weight : String,
+       rate : Number
+    },
     gold : {
         type : String,
         validate: {
@@ -80,15 +87,20 @@ const inventorySchema = new Schema({
         required: true
     },
     gw : {
-        type : Number,
-        validate: {
-            validator: async function(value) {
-                const allowedValues = await AllowedGW.find({}, 'value');
-                return allowedValues.map(item => item.value).includes(value);
+        value : {
+            type : Number,
+            validate: {
+                validator: async function(value) {
+                    const allowedValues = await AllowedGW.find({}, 'value');
+                    return allowedValues.map(item => item.value).includes(value);
+                },
+                message: props => `${props.value} is not a valid value for item!`
             },
-            message: props => `${props.value} is not a valid value for item!`
         },
-        required: true
+        rate : Number
+    },
+    image : {
+        type : String
     }
 }, {timestamps: true})
 

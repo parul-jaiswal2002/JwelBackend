@@ -7,11 +7,31 @@ const getAllInventory = async (req, res) => {
     res.status(200).json(inventories)
 }
 
+//get one inventory api
+const getOneInventory = async (req, res) => {
+    const query = req.query.q;
+    console.log('Query:', query); 
+    try {
+        // Fetch inventory data from your API
+        const response = await Inventory.findOne({ itemCode: query });
+
+        // Return the search results
+        if (response) {
+            res.json(response);
+        } else {
+            res.status(404).json({ error: 'Inventory not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching inventory data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 //add one inventory api
 const addInventory = async (req, res) => {
-    const {item, itemCode, dia1, dia2, col1, col2,gold , gw} = req.body;
+    const {item, itemCode, dia1, dia2, col1, col2,col1W, col2W,gold , gw, image} = req.body;
     try{
-       const inventory = await Inventory.create({item, itemCode, dia1, dia2, col1, col2,gold , gw});
+       const inventory = await Inventory.create({item, itemCode, dia1, dia2, col1, col2,col1W, col2W,gold , gw, image});
        res.status(200).json(inventory)
     }
     catch(error){
@@ -80,6 +100,7 @@ const searchInventories = async (req, res) => {
 
 module.exports = {
     getAllInventory,
+    getOneInventory,
     addInventory,
     editInventory,
     deleteInventory,

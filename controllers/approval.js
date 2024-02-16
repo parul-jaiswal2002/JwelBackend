@@ -51,7 +51,7 @@ const createApproval = async (req, res) => {
         await newApproval.save();
 
         // Return a success response
-        res.status(201).json({ message: 'Approval created successfully', newApproval, totalPrice });
+        res.status(201).json({ message: 'Approval created successfully', newApproval});
     } catch (error) {
         // If an error occurs, return an error response
         console.error(error);

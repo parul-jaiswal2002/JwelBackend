@@ -1,9 +1,11 @@
 const express = require('express');
-const {getAllInventory, addInventory, editInventory, deleteInventory, searchInventories} = require('../controllers/inventoryController')
+const {getAllInventory, addInventory, editInventory, deleteInventory, searchInventories, getOneInventory} = require('../controllers/inventoryController')
 
 const router = express.Router();
 
 router.get('/', getAllInventory);
+
+router.get('/searchCode', getOneInventory)
 
 router.post("/", addInventory);
 
