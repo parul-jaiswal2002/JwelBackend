@@ -12,6 +12,8 @@ const allowedDia2 = require('./routes/allowedValues/allowedDia2')
 const allowedGW = require('./routes/allowedValues/allowedGW')
 const approvalRouter = require('./routes/approval')
 const estimateRouter = require('./routes/estimate')
+const invoiceRouter = require('./routes/invoice')
+
 
 //express app
 const app = express()
@@ -40,3 +42,4 @@ app.use('/api/inventory/allowed-Dia2', allowedDia2);
 app.use('/api/inventory/allowed-GW', allowedGW);
 app.use('/api/approval', approvalRouter)
 app.use('/api/estimate', estimateRouter)
+app.use('/api/invoice', invoiceRouter)
