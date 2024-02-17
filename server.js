@@ -2,6 +2,7 @@ require("dotenv").config()
 
 const express = require("express")
 const mongoose = require("mongoose") 
+const cors = require('cors')
 const userRouter = require('./routes/userRoutes')
 const inventoryRouter = require('./routes/inventoryRoutes')
 const allowedItemsRouter = require('./routes/allowedValues/allowedItemsRoutes');
@@ -15,7 +16,7 @@ const estimateRouter = require('./routes/estimate')
 const app = express()
 //middleware
 app.use(express.json())
-
+app.use(cors())
 
 //connnect to db
 mongoose.connect(process.env.MONGO_URI)
