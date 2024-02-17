@@ -6,6 +6,7 @@ const cors = require('cors')
 const userRouter = require('./routes/userRoutes')
 const inventoryRouter = require('./routes/inventoryRoutes')
 const allowedItemsRouter = require('./routes/allowedValues/allowedItemsRoutes');
+const allowedItemCodeRouter = require('./routes/allowedValues/allowedItemCodes')
 const allowedDia1 = require('./routes/allowedValues/allowedDia1')
 const allowedDia2 = require('./routes/allowedValues/allowedDia2')
 const allowedGW = require('./routes/allowedValues/allowedGW')
@@ -33,6 +34,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/user' ,userRouter)
 app.use('/api/inventory', inventoryRouter)
 app.use('/api/inventory/allowed-items', allowedItemsRouter)
+app.use('/api/inventory/allowed-itemCodes', allowedItemCodeRouter)
 app.use('/api/inventory/allowed-Dia1', allowedDia1);
 app.use('/api/inventory/allowed-Dia2', allowedDia2);
 app.use('/api/inventory/allowed-GW', allowedGW);

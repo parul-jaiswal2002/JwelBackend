@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const AllowedItems = require('../models/allowedValues/allowedItems')
-const AllowedDia1 = require('../models/allowedValues/allowedDia1')
-const AllowedDia2 = require('../models/allowedValues/allowedDia2')
-const AllowedGW = require('../models/allowedValues/allowedGW')
+const AllowedItems = require('./allowedValues/allowedItems')
+const AllowedItemCodes = require('./allowedValues/allowedItemCodes')
+const AllowedDia1 = require('./allowedValues/allowedDia1')
+const AllowedDia2 = require('./allowedValues/allowedDia2')
+const AllowedGW = require('./allowedValues/allowedGW')
 const Schema = mongoose.Schema;
 
 const inventorySchema = new Schema({
@@ -20,9 +21,15 @@ const inventorySchema = new Schema({
     },
     
     itemCode : {
-            type: String,
-            required: true,
-            unique :true,
+        type: String,
+        required: true,
+        validate: {
+            validator: async function(value) {
+                const allowedValues = await AllowedItemCodes.find({}, 'value');
+                return allowedValues.map(item => item.value).includes(value);
+            },
+            message: props => `${props.value} is not a valid value for item!`
+        }
     },
     dia1: {
         value : {

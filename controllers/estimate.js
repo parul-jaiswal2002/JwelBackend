@@ -1,9 +1,9 @@
 const Estimate = require('../models/estimate');
 
 const createEstimate = async (req, res) => {
-    const {itemCode, content, weight, rate,total, tagNumber} = req.body;
+    const {estimateId ,itemCode, content, weight, rate,total, tagNumber, totalPrice} = req.body;
     try{
-       const inventory = await Estimate.create({itemCode, content, weight, rate,total, tagNumber});
+       const inventory = await Estimate.create({estimateId,itemCode, content, weight, rate,total, tagNumber, totalPrice});
        console.log(inventory)
        res.status(200).json(inventory)
     }

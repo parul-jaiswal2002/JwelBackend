@@ -3,9 +3,12 @@ const Inventory = require('./inventoryModel')
 const Schema = mongoose.Schema;
 
 const estimateSchema = new Schema({
+    estimateId: {
+        type: String,
+        unique: true,
+    },
     itemCode : {
         type: String,
-        ref: 'Inventory', // Reference to the Inventory model
         required: true,
     },
     content  : {
@@ -37,6 +40,9 @@ const estimateSchema = new Schema({
     tagNumber : {
         type : Number,
         required : true
+    },
+    totalPrice : {
+        type : Number
     }
 });
 
@@ -44,8 +50,17 @@ const estimateSchema = new Schema({
 estimateSchema.pre('save', async function(next) {
     try {
         // Fetch details based on itemCode (assuming there's another model for this)
+        if (!this.estimateId) {
+            // Generate a unique identifier for the estimate
+            this.estimateId = new mongoose.Types.ObjectId().toString();
+        }
         const itemDetails = await Inventory.findOne({ itemCode: this.itemCode });
-        console.log(itemDetails)
+        let totalPrice = (itemDetails.dia1.rate * itemDetails.dia1.value)+(itemDetails.dia2.rate * itemDetails.dia2.value)
+                            +(itemDetails.col1W.rate * itemDetails.col1W.weight)+(itemDetails.col2W.rate * itemDetails.col2W.weight)
+                            +(itemDetails.gw.rate * itemDetails.gw.value)
+        
+        //totalPrice after tag number
+           totalPrice += totalPrice*(this.tagNumber)/100
         // Populate fields if details are found
         if (itemDetails) {
             this.content = {
@@ -74,6 +89,7 @@ estimateSchema.pre('save', async function(next) {
                 col2W: itemDetails.col2W.rate * itemDetails.col2W.weight,
                 gw: itemDetails.gw.rate * itemDetails.gw.value
             };
+            this.totalPrice  = totalPrice
         }
 
         next();
