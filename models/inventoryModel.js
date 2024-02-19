@@ -32,30 +32,24 @@ const inventorySchema = new Schema({
         }
     },
     dia1: {
-        value : {
-            type: Number,
-            validate: {
-                validator: async function(value) {
-                    const allowedValues = await AllowedDia1.find({}, 'value');
-                    return allowedValues.map(item => item.value).includes(value);
-                },
-                message: props => `${props.value} is not a valid value for item!`
+        type: Number,
+        validate: {
+            validator: async function(value) {
+                const allowedValues = await AllowedDia1.find({}, 'value');
+                return allowedValues.map(item => item.value).includes(value);
             },
+            message: props => `${props.value} is not a valid value for item!`
         },
-        rate : Number
     },
     dia2: {
-        value : {
-            type: Number,
-            validate: {
-                validator: async function(value) {
-                    const allowedValues = await AllowedDia2.find({}, 'value');
-                    return allowedValues.map(item => item.value).includes(value);
-                },
-                message: props => `${props.value} is not a valid value for item!`
+        type: Number,
+        validate: {
+            validator: async function(value) {
+                const allowedValues = await AllowedDia2.find({}, 'value');
+                return allowedValues.map(item => item.value).includes(value);
             },
+            message: props => `${props.value} is not a valid value for item!`
         },
-        rate : Number
     },
     col1 : {
         type: String,
@@ -76,12 +70,10 @@ const inventorySchema = new Schema({
         },
     },
     col1W : {
-       weight : String,
-       rate : Number
+       type : Number,
     },
     col2W : {
-       weight : String,
-       rate : Number
+       type : Number,
     },
     gold : {
         type : String,
@@ -94,17 +86,14 @@ const inventorySchema = new Schema({
         required: true
     },
     gw : {
-        value : {
-            type : Number,
-            validate: {
-                validator: async function(value) {
-                    const allowedValues = await AllowedGW.find({}, 'value');
-                    return allowedValues.map(item => item.value).includes(value);
-                },
-                message: props => `${props.value} is not a valid value for item!`
+        type : Number,
+        validate: {
+            validator: async function(value) {
+                const allowedValues = await AllowedGW.find({}, 'value');
+                return allowedValues.map(item => item.value).includes(value);
             },
+            message: props => `${props.value} is not a valid value for item!`
         },
-        rate : Number
     },
     image : {
         type : String

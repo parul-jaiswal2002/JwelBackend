@@ -17,24 +17,24 @@ const estimateSchema = new Schema({
        gold : String,
     },
     weight : {
-        dia1 : String,
-       dia2 : String,
-       col1W : String,
-       col2W : String,
+        dia1 : Number,
+       dia2 : Number,
+       col1W : Number,
+       col2W : Number,
        gw : Number
     },
     rate : {
-        dia1 : String,
-       dia2 : String,
-       col1W : String,
-       col2W : String,
+        dia1 : Number,
+       dia2 : Number,
+       col1W : Number,
+       col2W : Number,
        gw : Number
     },
     total : {
-        dia1 : String,
-        dia2 : String,
-        col1W : String,
-        col2W : String,
+        dia1 : Number,
+        dia2 : Number,
+        col1W : Number,
+        col2W : Number,
         gw : Number
     },
     tagNumber : {
@@ -55,13 +55,15 @@ estimateSchema.pre('save', async function(next) {
             this.estimateId = new mongoose.Types.ObjectId().toString();
         }
         const itemDetails = await Inventory.findOne({ itemCode: this.itemCode });
-        let totalPrice = (itemDetails.dia1.rate * itemDetails.dia1.value)+(itemDetails.dia2.rate * itemDetails.dia2.value)
-                            +(itemDetails.col1W.rate * itemDetails.col1W.weight)+(itemDetails.col2W.rate * itemDetails.col2W.weight)
-                            +(itemDetails.gw.rate * itemDetails.gw.value)
+        let totalPrice = (itemDetails.dia1 * this.rate.dia1)+(itemDetails.dia2* this.rate.dia1)
+                            +(itemDetails.col1W * this.rate.col1W)+(itemDetails.col2W * this.rate.col2W)
+                            +(itemDetails.gw * this.rate.gw)
+        
+        
         
         //totalPrice after tag number
            totalPrice += totalPrice*(this.tagNumber)/100
-        // Populate fields if details are found
+        // Populate fields if details are found 
         if (itemDetails) {
             this.content = {
                 col1: itemDetails.col1,
@@ -69,25 +71,18 @@ estimateSchema.pre('save', async function(next) {
                 gold: itemDetails.gold
             };
             this.weight = {
-                dia1: itemDetails.dia1.value,
-                dia2: itemDetails.dia2.value,
-                col1W: itemDetails.col1W.weight,
-                col2W: itemDetails.col2W.weight,
-                gw: itemDetails.gw.value
-            };
-            this.rate = {
-                dia1: itemDetails.dia1.rate,
-                dia2: itemDetails.dia2.rate,
-                col1W: itemDetails.col1W.rate,
-                col2W: itemDetails.col2W.rate,
-                gw: itemDetails.gw.rate
+                dia1: itemDetails.dia1,
+                dia2: itemDetails.dia2,
+                col1W: itemDetails.col1W,
+                col2W: itemDetails.col2W,
+                gw: itemDetails.gw
             };
             this.total = {
-                dia1: itemDetails.dia1.rate * itemDetails.dia1.value,
-                dia2: itemDetails.dia2.rate * itemDetails.dia2.value,
-                col1W: itemDetails.col1W.rate * itemDetails.col1W.weight,
-                col2W: itemDetails.col2W.rate * itemDetails.col2W.weight,
-                gw: itemDetails.gw.rate * itemDetails.gw.value
+                dia1: itemDetails.dia1*this.rate.dia1,
+                dia2: itemDetails.dia2 * this.rate.dia2,
+                col1W: itemDetails.col1W * this.rate.col1W,
+                col2W: itemDetails.col2W * this.rate.col2W,
+                gw: itemDetails.gw * this.rate.gw
             };
             this.totalPrice  = totalPrice
         }
