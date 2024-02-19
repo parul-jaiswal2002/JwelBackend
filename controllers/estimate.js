@@ -48,7 +48,7 @@ const editEstimate = async (req, res) => {
 
         newTotalPrice += newTotalPrice*(tagNumber)/100
         // Update the total price
-        estimate.totalPrice = newTotalPrice;
+        // estimate.totalPrice = newTotalPrice;
 
         // Save the updated estimate
         // const updatedEstimate = await estimate.save();

@@ -1,10 +1,29 @@
 const Invoice = require('../models/invoice');
 
+const getAllInvoices = async (req, res) => {
+    const invoices = await Invoice.find({}).sort({createdAt : -1})
+    res.status(200).json(invoices)
+}
+
+const getSingleInvoice = async (req, res) => {
+    const { invoiceId } = req.params;
+    try{
+        const invoice = await Invoice.findOne({ invoiceId });
+        if(!invoice){
+            return res.status(404).json({ error: "No such Invoice" });
+        }
+        res.status(200).json(invoice)
+    }
+    catch(error){
+        res.status(400).json({error : "Some server error!"})
+     }
+}
+
 const createInvoice = async (req, res) => {
     const {makerName, grossWeight, invoiceId ,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges,  image} = req.body;
     try{
-       const inventory = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image});
-       res.status(200).json(inventory)
+       const invoice = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image});
+       res.status(200).json(invoice)
     }
     catch(error){
        res.status(400).json({error : error.message})
@@ -20,13 +39,15 @@ const editInvoice = async (req, res) => {
         // Find the estimate by estimateId
         const invoice = await Invoice.findOne({ invoiceId });
         if (!invoice) {
-            return res.status(404).json({ error: "No such Estimate" });
+            return res.status(404).json({ error: "No such Invoice" });
         }
 
         // Extract the fields from the request body
-        const { rate,total, tagNumber, makingCharges,totalPrice, ...updatedFields } = req.body;
+        const { makerName, grossWeight, rate,total, tagNumber, makingCharges,totalPrice, ...updatedFields } = req.body;
 
         // Update the rate fields
+        invoice.makerName = makerName,
+        invoice.grossWeight = grossWeight,
         invoice.rate = rate;
         invoice.tagNumber = tagNumber;
         invoice.makingCharges = makingCharges
@@ -47,9 +68,9 @@ const editInvoice = async (req, res) => {
 
         // Save the updated estimate
         // const updatedEstimate = await estimate.save();
-        const updateInvoice = await Estimate.findOneAndUpdate(
+        const updateInvoice = await Invoice.findOneAndUpdate(
             { invoiceId: invoiceId },
-            { ...updatedFields,rate,total:invoice.total, tagNumber,makingCharges, totalPrice:newTotalPrice },
+            { ...updatedFields,makerName,grossWeight, rate,total:invoice.total, tagNumber,makingCharges, totalPrice:newTotalPrice },
             { new: true }
         );
 
@@ -60,7 +81,23 @@ const editInvoice = async (req, res) => {
     }
 }
 
+
+//delete a invoice 
+const deleteInvoice = async (req, res) => {
+    const {invoiceId} = req.params
+    const invoice = await Invoice.findOne({ invoiceId });
+    const deleted = await Invoice.deleteOne({invoiceId})
+        if(!invoice){
+            return res.status(404).json({error : "No such Invoice"})
+        }
+        res.status(200).json("deleted Successfully")
+   
+}
 module.exports = {
+    getAllInvoices,
+    getSingleInvoice,
     createInvoice,
-    editInvoice
+    editInvoice,
+    deleteInvoice
+
 }

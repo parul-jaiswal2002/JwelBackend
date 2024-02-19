@@ -24,6 +24,8 @@ const loginUser = async (req,res) => {
          companyName : user.companyName,
          gst : user.gst,
          email: user.email,
+         password : user.password,
+         cpassword : user.cpassword
          // Add other fields you want to send
         };
         res.status(200).json({user:userInfo, token})
@@ -51,6 +53,8 @@ const signUpUser = async (req, res) => {
          companyName : user.companyName,
          gst : user.gst,
          email: user.email,
+         password : user.password,
+         cpassword : user.cpassword
          // Add other fields you want to send
         };
        res.status(200).json({user:userInfo, token}) 
