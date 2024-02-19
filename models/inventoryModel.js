@@ -95,6 +95,9 @@ const inventorySchema = new Schema({
             message: props => `${props.value} is not a valid value for item!`
         },
     },
+    makingCharges :{
+        type : Number
+    },
     image : {
         type : String
     }

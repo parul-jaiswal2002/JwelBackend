@@ -41,6 +41,9 @@ const estimateSchema = new Schema({
         type : Number,
         required : true
     },
+    makingCharges : {
+        type : Number
+    },
     totalPrice : {
         type : Number
     }
@@ -55,9 +58,9 @@ estimateSchema.pre('save', async function(next) {
             this.estimateId = new mongoose.Types.ObjectId().toString();
         }
         const itemDetails = await Inventory.findOne({ itemCode: this.itemCode });
-        let totalPrice = (itemDetails.dia1 * this.rate.dia1)+(itemDetails.dia2* this.rate.dia1)
+        let totalPrice = (itemDetails.dia1 * this.rate.dia1)+(itemDetails.dia2* this.rate.dia2)
                             +(itemDetails.col1W * this.rate.col1W)+(itemDetails.col2W * this.rate.col2W)
-                            +(itemDetails.gw * this.rate.gw)
+                            +(itemDetails.gw * this.rate.gw)+(itemDetails.makingCharges || this.makingCharges)
         
         
         
