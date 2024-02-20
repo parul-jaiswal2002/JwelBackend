@@ -46,6 +46,10 @@ const estimateSchema = new Schema({
     },
     totalPrice : {
         type : Number
+    },
+    user_id : {
+        type : String,
+        required : true
     }
 });
 

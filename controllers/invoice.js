@@ -1,8 +1,10 @@
 const Invoice = require('../models/invoice');
+const Inventory = require('../models/inventoryModel')
 
 const getAllInvoices = async (req, res) => {
-    const invoices = await Invoice.find({}).sort({createdAt : -1})
-    res.status(200).json(invoices)
+    const user_id = req.user._id //ab ye sirf usi user k workout serch krega
+     const inventories = await Invoice.find({user_id}).sort({createdAt : -1})
+    res.status(200).json(inventories)
 }
 
 const getSingleInvoice = async (req, res) => {
@@ -22,7 +24,13 @@ const getSingleInvoice = async (req, res) => {
 const createInvoice = async (req, res) => {
     const {makerName, grossWeight, invoiceId ,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges,  image} = req.body;
     try{
-       const invoice = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image});
+        const user_id = req.user._id
+        const inventoryExists = await Inventory.findOne({ itemCode, user_id });
+        if (!inventoryExists) {
+            return res.status(400).json({ error: "Inventory with the given itemCode does not exist for the user" });
+        }
+       
+       const invoice = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image, user_id});
        res.status(200).json(invoice)
     }
     catch(error){

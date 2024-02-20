@@ -1,6 +1,12 @@
 const express = require('express');
 const {getAllInvoices,getSingleInvoice, createInvoice, editInvoice,deleteInvoice} = require('../controllers/invoice')
-const router = express.Router();
+
+
+//middleware// require auth for all workout routes
+const requireAuth = require("../middleware/requireAuth")
+
+const router = express.Router()
+router.use(requireAuth)
 
 
 //get all invoices

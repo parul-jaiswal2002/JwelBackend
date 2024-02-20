@@ -24,6 +24,7 @@ userSchema.statics.login = async function (email, password){
     }
     //ab hm jo email h use database m search krenge
     const user = await SignupUser.findOne({email})
+    console.log(user)
     if(!user){
     throw Error("Incorrect Email")
     }

@@ -2,10 +2,24 @@ const Estimate = require('../models/estimate');
 const Inventory = require('../models/inventoryModel')
 
 
+
+const getAllEstiamte = async (req, res) => {
+    const user_id = req.user._id //ab ye sirf usi user k workout serch krega
+     const inventories = await Estimate.find({user_id}).sort({createdAt : -1})
+    res.status(200).json(inventories)
+}
+
 const createEstimate = async (req, res) => {
     const {estimateId ,itemCode, content, weight, rate,total, tagNumber,makingCharges, totalPrice} = req.body;
     try{
-       const inventory = await Estimate.create({estimateId,itemCode, content, weight, rate,total, tagNumber,makingCharges, totalPrice});
+
+        const user_id = req.user._id
+        // Check if the itemCode exists for the particular user's inventories
+        const inventoryExists = await Inventory.findOne({ itemCode, user_id });
+        if (!inventoryExists) {
+            return res.status(400).json({ error: "Inventory with the given itemCode does not exist for the user" });
+        }
+       const inventory = await Estimate.create({estimateId,itemCode, content, weight, rate,total, tagNumber,makingCharges, totalPrice, user_id});
  
        res.status(200).json(inventory)
  
@@ -65,7 +79,20 @@ const editEstimate = async (req, res) => {
     }
 }
 
+//deleteEstimate  api
+const deleteEstimate = async (req, res) => {
+    const {estimateId} = req.params
+    const invoice = await Estimate.findOne({ estimateId });
+    const deleted = await Estimate.deleteOne({estimateId})
+        if(!invoice){
+            return res.status(404).json({error : "No such Estimate"})
+        }
+        res.status(200).json("deleted Successfully")
+}
+
 module.exports = {
+    getAllEstiamte,
     createEstimate,
-    editEstimate
+    editEstimate,
+    deleteEstimate
 }

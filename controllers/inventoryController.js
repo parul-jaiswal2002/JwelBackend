@@ -7,9 +7,12 @@ const AllowedDia2 = require('../models/allowedValues/allowedDia2')
 const AllowedGW = require('../models/allowedValues/allowedGW')
 
 
+
+
 //get all inventories api
 const getAllInventory = async (req, res) => {
-    const inventories = await Inventory.find({}).sort({createdAt : -1})
+    const user_id = req.user._id //ab ye sirf usi user k workout serch krega
+     const inventories = await Inventory.find({user_id}).sort({createdAt : -1})
     res.status(200).json(inventories)
 }
 
@@ -37,8 +40,12 @@ const getOneInventory = async (req, res) => {
 const addInventory = async (req, res) => {
     const {item, itemCode, dia1, dia2, col1, col2,col1W, col2W,gold , gw, makingCharges,image} = req.body;
     try{
-    const inventory = await Inventory.create({item, itemCode, dia1, dia2, col1, col2,col1W, col2W,gold , gw, makingCharges, image});
-       res.status(200).json(inventory)
+
+        const user_id = req.user._id //requireauth se
+        console.log(user_id)
+        // yha hm workout nam ka document bna rhe h
+       const inventory = await Inventory.create({item, itemCode, dia1, dia2, col1, col2,col1W, col2W,gold , gw, makingCharges,image, user_id}) //to make it synchronus
+       res.status(200).json(inventory) //us document ko hm resposne krenge taki user ko lge uska data create ho gya h
     }
     catch(error){
        res.status(400).json({error : error.message})
@@ -58,15 +65,11 @@ const editInventory = async (req, res) => {
     try {
         // Check if the updated item value exists in the allowed items list
         const allowedItem = await AllowedItems.findOne({ value: item });
+        
         if (!allowedItem) {
             return res.status(400).json({ error: `${item} is not an allowed item` });
         }
 
-       
-        const allowedItemCode = await AllowedItemCodes.findOne({ value: itemCode });
-        if (!allowedItemCode) {
-            return res.status(400).json({ error: `${itemCode} is not an allowed item code` });
-        }
 
         const allowedDia1 = await AllowedDia1.findOne({ value: dia1 });
         if (!allowedDia1) {
@@ -97,10 +100,11 @@ const editInventory = async (req, res) => {
         // Update the inventory item
         const inventory = await Inventory.findOneAndUpdate(
             { _id: id },
-            { ...updatedFields },
+            { ...updatedFields, item, itemCode, dia1, dia2, col1, col2, col1W, col2W,gw },
             { new: true }
         );
 
+        console.log(inventory)
         if (!inventory) {
             return res.status(404).json({ error: "No such Inventory" });
         }

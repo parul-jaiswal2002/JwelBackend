@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const AllowedItems = require('./allowedValues/allowedItems')
-const AllowedItemCodes = require('./allowedValues/allowedItemCodes')
+// const AllowedItemCodes = require('./allowedValues/allowedItemCodes')
 const AllowedDia1 = require('./allowedValues/allowedDia1')
 const AllowedDia2 = require('./allowedValues/allowedDia2')
 const AllowedGW = require('./allowedValues/allowedGW')
+const User = require('./signup')
 const Schema = mongoose.Schema;
 
 const inventorySchema = new Schema({
@@ -23,13 +24,13 @@ const inventorySchema = new Schema({
     itemCode : {
         type: String,
         required: true,
-        validate: {
-            validator: async function(value) {
-                const allowedValues = await AllowedItemCodes.find({}, 'value');
-                return allowedValues.map(item => item.value).includes(value);
-            },
-            message: props => `${props.value} is not a valid value for item!`
-        }
+        // validate: {
+        //     validator: async function(value) {
+        //         const allowedValues = await AllowedItemCodes.find({}, 'value');
+        //         return allowedValues.map(item => item.value).includes(value);
+        //     },
+        //     message: props => `${props.value} is not a valid value for item!`
+        // }
     },
     dia1: {
         type: Number,
@@ -100,7 +101,16 @@ const inventorySchema = new Schema({
     },
     image : {
         type : String
-    }
+    },
+    user_id : {
+        type : Schema.Types.ObjectId,
+        ref: 'User', // Reference to the User model
+        required : true
+     }
 }, {timestamps: true})
+
+// Create a compound index
+inventorySchema.index({ itemCode: 1, user_id: 1 }, { unique: true });
+
 
 module.exports = mongoose.model('Inventory', inventorySchema)

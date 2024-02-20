@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./signup')
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
@@ -30,7 +31,8 @@ const productSchema = new Schema({
     },
     gw : {
         type : Number,
-    }
+    },
+    
 });
 
 const approvalSchema = new Schema({
@@ -49,6 +51,11 @@ const approvalSchema = new Schema({
     products: [productSchema], // Array of products
     totalPrice : {
         type : Number
+    },
+    user_id : {
+        type : Schema.Types.ObjectId,
+        ref: 'User', // Reference to the User model
+        required : true
     }
 }, { timestamps: true });
 

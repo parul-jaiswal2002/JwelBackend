@@ -17,9 +17,14 @@ const invoiceRouter = require('./routes/invoice')
 
 //express app
 const app = express()
+app.use(cors())
 //middleware
 app.use(express.json())
-app.use(cors())
+app.use((req, res, next) => {
+    console.log(req.path,req.method)
+    next()
+})
+
 
 //connnect to db
 mongoose.connect(process.env.MONGO_URI)

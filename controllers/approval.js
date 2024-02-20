@@ -2,10 +2,22 @@ const mongoose = require('mongoose');
 const Approval = require('../models/approval');
 const Inventory = require('../models/inventoryModel');
 
+
+const getAllApprovals = async (req, res) => {
+    const user_id = req.user._id //ab ye sirf usi user k workout serch krega
+     const inventories = await Approval.find({user_id}).sort({createdAt : -1})
+    res.status(200).json(inventories)
+}
+
 const createApproval = async (req, res) => {
     try {
+       
+        
         // Extract data from the request body
         const { partyName, gst, through, products } = req.body;
+        console.log(req.body)
+        const user_id = req.user._id //requireauth se
+        console.log(req.user)
 
         // Validate that products array is not empty
         if (!products || products.length === 0) {
@@ -44,7 +56,8 @@ const createApproval = async (req, res) => {
             gst,
             through,
             products: productsWithDetails, // Array of products with productName, priceNumber, and additional details
-            totalPrice
+            totalPrice,
+            user_id
         });
 
         // Save the new approval to the database
@@ -60,5 +73,6 @@ const createApproval = async (req, res) => {
 };
 
 module.exports = {
-    createApproval
+    createApproval,
+    getAllApprovals
 };
