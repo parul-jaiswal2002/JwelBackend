@@ -13,6 +13,7 @@ const allowedGW = require('./routes/allowedValues/allowedGW')
 const approvalRouter = require('./routes/approval')
 const estimateRouter = require('./routes/estimate')
 const invoiceRouter = require('./routes/invoice')
+const rawMatRouter = require('./routes/rawMaterial')
 
 
 //express app
@@ -48,3 +49,4 @@ app.use('/api/inventory/allowed-GW', allowedGW);
 app.use('/api/approval', approvalRouter)
 app.use('/api/estimate', estimateRouter)
 app.use('/api/invoice', invoiceRouter)
+app.use('/api/inventory/raw-material', rawMatRouter)
