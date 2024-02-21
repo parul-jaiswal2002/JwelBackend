@@ -10,10 +10,13 @@ const allowedItemCodeRouter = require('./routes/allowedValues/allowedItemCodes')
 const allowedDia1 = require('./routes/allowedValues/allowedDia1')
 const allowedDia2 = require('./routes/allowedValues/allowedDia2')
 const allowedGW = require('./routes/allowedValues/allowedGW')
+const allowedSemiPrecious = require('./routes/allowedValues/allowedSemiPrecious')
 const approvalRouter = require('./routes/approval')
 const estimateRouter = require('./routes/estimate')
 const invoiceRouter = require('./routes/invoice')
 const rawMatRouter = require('./routes/rawMaterial')
+const preciousStone = require('./routes/stones/preciousStone')
+const semiPrecious = require('./routes/stones/semiPreciousStone')
 
 
 //express app
@@ -46,7 +49,10 @@ app.use('/api/inventory/allowed-itemCodes', allowedItemCodeRouter)
 app.use('/api/inventory/allowed-Dia1', allowedDia1);
 app.use('/api/inventory/allowed-Dia2', allowedDia2);
 app.use('/api/inventory/allowed-GW', allowedGW);
+app.use('/api/inventory/allowed-semiPrecious', allowedSemiPrecious);
 app.use('/api/approval', approvalRouter)
 app.use('/api/estimate', estimateRouter)
 app.use('/api/invoice', invoiceRouter)
 app.use('/api/inventory/raw-material', rawMatRouter)
+app.use('/api/inventory/precious-stone', preciousStone)
+app.use('/api/inventory/semiPrecious-stone', semiPrecious)

@@ -3,6 +3,10 @@ const User = require("../models/signup")
 
 const requireAuth =  async (req, res, next) => {
 
+    if (req.path === '/allowed-semiPrecious') {
+        return next();
+    }
+
 
     const {authorization} = req.headers //(headers ki property h authorization)
     
