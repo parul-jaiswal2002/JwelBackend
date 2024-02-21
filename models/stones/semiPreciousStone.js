@@ -23,7 +23,7 @@ const semiPreciousStone = new Schema({
         type : String,
         validate: {
             validator: function(value) {
-                return ['Cabochon Cut', 'Buff-Top','Round Brilliant-Cut', 'Oval Cut', 'Baguette Cut', 'Princess Cut', 'Pear Cut', 'Emerald Cut','Octagon Cut','Cushion Cut','Marquise Cut', 'Briolette', 'Heart Shape Cut', 'Trilliant Cut','Millennium Cut' ].includes(value);
+                return ['Cabochon Cut', 'Buff-Top','Round Brilliant-Cut', 'Oval Cut', 'Baguette Cut','Beads','cabochons', 'Princess Cut', 'Pear Cut', 'Emerald Cut','Octagon Cut','Cushion Cut','Marquise Cut', 'Briolette', 'Heart Shape Cut', 'Trilliant Cut','Millennium Cut' ].includes(value);
             },
             message: props => `${props.value} is not a valid value for shape!`
         },

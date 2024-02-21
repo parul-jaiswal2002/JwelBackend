@@ -3,7 +3,11 @@ const User = require("../models/signup")
 
 const requireAuth =  async (req, res, next) => {
 
-    if (req.path === '/allowed-semiPrecious') {
+    if (req.path === '/allowed-semiPrecious' || req.path === '/allowed-items' 
+        || req.path === '/allowed-itemCodes' || req.path === '/allowed-Dia1'
+        || req.path === '/allowed-Dia2'       || req.path === '/allowed-GW'
+    
+    ) {
         return next();
     }
 
