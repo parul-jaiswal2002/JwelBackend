@@ -20,13 +20,25 @@ const preciousStone = new Schema({
         type : String,
         validate: {
             validator: function(value) {
-                return ['Cabochon Cut', 'Buff-Top','Round Brilliant-Cut', 'Oval Cut', 'Baguette Cut', 'Princess Cut','Beads','cabochons', 'Pear Cut', 'Emerald Cut','Octagon Cut','Cushion Cut','Marquise Cut', 'Briolette', 'Heart Shape Cut', 'Trilliant Cut','Millennium Cut' ].includes(value);
+                return ['Cabochon Cut','Emerald', 'Buff-Top','Round Brilliant-Cut', 'Oval Cut', 'Baguette Cut', 'Princess Cut','Beads','cabochons', 'Pear Cut', 'Emerald Cut','Octagon Cut','Cushion Cut','Marquise Cut', 'Briolette', 'Heart Shape Cut', 'Trilliant Cut','Millennium Cut' ].includes(value);
             },
             message: props => `${props.value} is not a valid value for shape!`
         },
     },
     size : {
         type : String
+    },
+    color : {
+        type : String
+    },
+    clarity : {
+        type : String,
+        validate: {
+            validator: function(value) {
+                return ['FL/IF', 'VVS1/VVS2', 'VVS1/VVS2', 'SL1/SL2', 'L1','L2','L3' ].includes(value);
+            },
+            message: props => `${props.value} is not a valid value for clarity!`
+        },
     },
     user_id : {
         type : String,

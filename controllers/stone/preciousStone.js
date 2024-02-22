@@ -31,12 +31,12 @@ const getOnePreciousStone = async (req, res) => {
 
 //add one Precious Stone api
 const addPreciousStone = async (req, res) => {
-    const {item,weight, shape, size} = req.body;
+    const {item,weight, shape, size, color, clarity} = req.body;
     try{
 
        const user_id = req.user._id //requireauth se
     
-       const preciousStone = await PreciousStone.create({item, weight,shape, size, user_id}) //to make it synchronus
+       const preciousStone = await PreciousStone.create({item, weight,shape, size,color,clarity, user_id}) //to make it synchronus
        res.status(200).json(preciousStone) //us document ko hm resposne krenge taki user ko lge uska data create ho gya h
     }
     catch(error){
@@ -52,7 +52,7 @@ const editPreciousStone = async (req, res) => {
     }
 
     // Extract the fields from the request body
-    const { item, weight,shape, size,  ...updatedFields } = req.body;
+    const { item, weight,shape, size,color, clarity,  ...updatedFields } = req.body;
 
     try {
        
@@ -60,7 +60,7 @@ const editPreciousStone = async (req, res) => {
         // Update the inventory item
         const inventory = await PreciousStone.findOneAndUpdate(
             { _id: id },
-            { ...updatedFields, item, weight,shape, size},
+            { ...updatedFields, item, weight,shape, size, color, clarity},
             { new: true }
         );
 
@@ -104,8 +104,8 @@ const searchPreciousStone = async (req, res) => {
                 inventory.item.toLowerCase().includes(query.toLowerCase()) ||
                 inventory.weight.toString().includes(query) ||
                 inventory.shape.toLowerCase().includes(query.toLowerCase) ||
-                inventory.size.toString().includes(query.toString()) 
-
+                inventory.size.toString().includes(query.toString()) ||
+                inventory.color.toLowerCase().includes(query.toLowerCase())
             );
         });
 

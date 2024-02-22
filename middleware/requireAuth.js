@@ -3,6 +3,7 @@ const User = require("../models/signup")
 
 const requireAuth =  async (req, res, next) => {
 
+    //for these routes i don't want any authentication
     if (req.path === '/allowed-semiPrecious' || req.path === '/allowed-items' 
         || req.path === '/allowed-itemCodes' || req.path === '/allowed-Dia1'
         || req.path === '/allowed-Dia2'       || req.path === '/allowed-GW'
@@ -12,22 +13,20 @@ const requireAuth =  async (req, res, next) => {
     }
 
 
-    const {authorization} = req.headers //(headers ki property h authorization)
+    const {authorization} = req.headers 
     
     if(!authorization){
         return res.status(401).json({error : "Autherization token required"})
     }
 
 
-    const token = authorization.split(" ")[1] //array bnakr alg kr liya ab token ko varify krenge
+    const token = authorization.split(" ")[1] 
 
     try{
-        const {_id} = jwt.verify(token, process.env.SECRET)//ye varify krke token(id + secret+password) return krta h 
+        const {_id} = jwt.verify(token, process.env.SECRET)
    
-        req.user = await User.findOne({_id}).select('_id')//bina select k ye email token id sahit return krta lkin hme to id chahiye bs taki dusre req uski help se ho jaye
-        next()//yani controller k next function like getallworkout and all
-
-        //yani ab id req k user propety m store ho gyi h yha req.user hi le jruri nhi req.abc bhi
+        req.user = await User.findOne({_id}).select('_id')
+        next()
     }
     catch(error){
         console.log(error)
@@ -36,4 +35,4 @@ const requireAuth =  async (req, res, next) => {
 
 }
 
-module.exports = requireAuth //ise hm workout routes m use krnege taki ye phle ho baki bad m raoutes
+module.exports = requireAuth 

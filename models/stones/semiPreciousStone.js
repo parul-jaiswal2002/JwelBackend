@@ -31,6 +31,9 @@ const semiPreciousStone = new Schema({
     size : {
         type : String
     },
+    color : {
+        type : String
+    },
     user_id : {
         type : String,
         required : true

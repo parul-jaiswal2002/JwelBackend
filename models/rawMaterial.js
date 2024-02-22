@@ -5,15 +5,12 @@ const rawMaterialSchema = new Schema({
     
     item: {
         type: String,
-        required: true,
-        validate: {
-            validator: function(value) {
-                return ['Gold', 'Silver'].includes(value);
-            },
-            message: props => `${props.value} is not a valid value for dia1!`
-        },
+        required: true
     },
     weight : {
+        type : Number,
+    },
+    purity : {
         type : Number,
     },
     user_id : {

@@ -37,7 +37,7 @@ const addRawMaterial = async (req, res) => {
        const user_id = req.user._id //requireauth se
     
        const rawMaterial = await RawMaterial.create({item, weight, user_id}) //to make it synchronus
-       res.status(200).json(rawMaterial) //us document ko hm resposne krenge taki user ko lge uska data create ho gya h
+       res.status(200).json(rawMaterial) 
     }
     catch(error){
        res.status(400).json({error : error.message})
