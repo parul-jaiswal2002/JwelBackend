@@ -4,6 +4,7 @@ const express = require("express")
 const mongoose = require("mongoose") 
 const cors = require('cors')
 const userRouter = require('./routes/userRoutes')
+const adminRouter = require('./routes/superAdmin')
 const inventoryRouter = require('./routes/inventoryRoutes')
 const allowedItemsRouter = require('./routes/allowedValues/allowedItemsRoutes');
 const allowedItemCodeRouter = require('./routes/allowedValues/allowedItemCodes')
@@ -43,6 +44,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 //routing
 app.use('/api/user' ,userRouter)
+app.use('/api/admin', adminRouter)
 app.use('/api/inventory', inventoryRouter)
 app.use('/api/inventory/allowed-items', allowedItemsRouter)
 app.use('/api/inventory/allowed-itemCodes', allowedItemCodeRouter)
