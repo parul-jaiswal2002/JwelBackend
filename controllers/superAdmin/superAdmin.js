@@ -1,4 +1,4 @@
-const admin = require('../models/superAdmin')
+const SuperAdmin = require('../../models/superAdmin/superAdmin')
 
 const jwt = require('jsonwebtoken')
 
@@ -14,12 +14,21 @@ const createToken = (_id) => {
      const {email, password} = req.body
      try {
          if(email && password){
-            const user = await admin.login(email,password)
+            const admin = await SuperAdmin.login(email,password)
             //it will return that user from static login function
     
             //creating token with the help of id
             const token = createToken(admin._id)
-            res.status(200).json({email, token})
+            const adminInfo = {
+               _id: admin._id,
+               firstName: admin.firstName,
+               lastName: admin.lastName,
+               companyName : admin.companyName,
+               gst : admin.gst,
+               email: admin.email,
+               // Add other fields you want to send
+              };
+            res.status(200).json({admin : adminInfo, token})
          }
          else{
             res.status(401).json({error : 'Incorrect details'})
@@ -38,11 +47,20 @@ const createToken = (_id) => {
      const {firstName, lastName, contact,email, password , cpassword} = req.body;
      
      try {
-        const user = await admin.signup(firstName, lastName, contact,email, password , cpassword)
+        const admin = await SuperAdmin.signup(firstName, lastName, contact,email, password , cpassword)
  
         
         const token = createToken(admin._id)
-        res.status(200).json({email, token}) 
+        const adminInfo = {
+         _id: admin._id,
+         firstName: admin.firstName,
+         lastName: admin.lastName,
+         companyName : admin.companyName,
+         gst : admin.gst,
+         email: admin.email,
+         // Add other fields you want to send
+        };
+        res.status(200).json({admin : adminInfo, token}) 
      }
      catch(error){
         res.status(400).json({error  : error.message})

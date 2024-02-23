@@ -4,7 +4,6 @@ const express = require("express")
 const mongoose = require("mongoose") 
 const cors = require('cors')
 const userRouter = require('./routes/userRoutes')
-const adminRouter = require('./routes/superAdmin')
 const inventoryRouter = require('./routes/inventoryRoutes')
 const allowedItemsRouter = require('./routes/allowedValues/allowedItemsRoutes');
 const allowedItemCodeRouter = require('./routes/allowedValues/allowedItemCodes')
@@ -18,6 +17,8 @@ const invoiceRouter = require('./routes/invoice')
 const rawMatRouter = require('./routes/rawMaterial')
 const preciousStone = require('./routes/stones/preciousStone')
 const semiPrecious = require('./routes/stones/semiPreciousStone')
+const superAdminRouter = require('./routes/superAdmin/superAdmin')
+const comapniesRouter = require('./routes/superAdmin/companies')
 
 
 //express app
@@ -35,7 +36,7 @@ app.use((req, res, next) => {
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
     app.listen(process.env.PORT, () => {     
-        console.log("successfully connected to db and listening to the server on port 3000 !!!")
+        console.log("successfully connected to db and listening to the server on port 4000 !!!")
     })
 })
 .catch((error) => {
@@ -44,7 +45,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 //routing
 app.use('/api/user' ,userRouter)
-app.use('/api/admin', adminRouter)
 app.use('/api/inventory', inventoryRouter)
 app.use('/api/inventory/allowed-items', allowedItemsRouter)
 app.use('/api/inventory/allowed-itemCodes', allowedItemCodeRouter)
@@ -58,3 +58,8 @@ app.use('/api/invoice', invoiceRouter)
 app.use('/api/inventory/raw-material', rawMatRouter)
 app.use('/api/inventory/precious-stone', preciousStone)
 app.use('/api/inventory/semiPrecious-stone', semiPrecious)
+
+
+//superAdmin
+app.use('/api/superAdmin',superAdminRouter)
+app.use('/api/superAdmin/companies', comapniesRouter)

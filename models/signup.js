@@ -28,6 +28,9 @@ const userSchema = new Schema({
         unique : true 
 
     },
+    contact : {
+      type : Number,
+    },
     password : {
         type : String,
         required : true
@@ -40,6 +43,7 @@ const userSchema = new Schema({
 
 userSchema.statics.signup = async function (firstName, lastName, companyName,gst,email,password,cpassword) {
       //validation
+      console.log(firstName, lastName, companyName, gst, email, password, cpassword)
       if(!firstName || !lastName || !companyName || !gst || !email || !password || !cpassword){
         throw Error('All fields are mandatory')
       }

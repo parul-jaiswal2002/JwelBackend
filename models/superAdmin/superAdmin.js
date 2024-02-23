@@ -26,7 +26,8 @@ const adminSchema = new Schema({
     },
     cpassword : {
         type : String
-    }
+    },
+    
 })
 
 //STATIC SIGNUP METHOD

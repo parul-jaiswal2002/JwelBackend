@@ -1,7 +1,7 @@
 const express = require('express')
-const { loginAdmin, signUpAdmin } = require('../controllers/superAdmin');
+const { loginAdmin, signUpAdmin } = require('../../controllers/superAdmin/superAdmin');
 
-const router = express.Router();
+const router = express.Router()
 
 //login
 router.post('/login', loginAdmin)
