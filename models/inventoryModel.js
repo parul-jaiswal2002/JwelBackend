@@ -102,6 +102,9 @@ const inventorySchema = new Schema({
     image : {
         type : String
     },
+    qnty : {
+       type : Number
+    },
     user_id : {
         type : Schema.Types.ObjectId,
         ref: 'User', // Reference to the User model

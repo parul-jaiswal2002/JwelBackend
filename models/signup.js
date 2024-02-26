@@ -38,6 +38,14 @@ const userSchema = new Schema({
     cpassword : {
         type : String,
         required : true,
+    },
+    resetToken: {
+        type: String,
+        default : null
+    },
+    resetTokenExpiry: {
+        type: Date,
+        default : null
     }
 })
 

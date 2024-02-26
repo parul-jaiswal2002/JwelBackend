@@ -22,7 +22,7 @@ const getSingleInvoice = async (req, res) => {
 }
 
 const createInvoice = async (req, res) => {
-    const {makerName, grossWeight, invoiceId ,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges,  image} = req.body;
+    const {makerName, grossWeight, invoiceId ,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges,  image,totalAfterTag,qnty} = req.body;
     try{
         const user_id = req.user._id
         const inventoryExists = await Inventory.findOne({ itemCode, user_id });
@@ -30,12 +30,15 @@ const createInvoice = async (req, res) => {
             return res.status(400).json({ error: "Inventory with the given itemCode does not exist for the user" });
         }
        
-       const invoice = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image, user_id});
+        const invoice = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image,totalAfterTag, qnty, user_id});
+        inventoryExists.qnty -= qnty;
+        await inventoryExists.save();
        res.status(200).json(invoice)
     }
     catch(error){
        res.status(400).json({error : error.message})
     }
+
 }
 
 
