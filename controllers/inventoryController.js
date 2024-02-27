@@ -5,7 +5,7 @@ const AllowedItemCodes = require('../models/allowedValues/allowedItemCodes')
 const AllowedDia1 = require('../models/allowedValues/allowedDia1')
 const AllowedDia2 = require('../models/allowedValues/allowedDia2')
 const AllowedGW = require('../models/allowedValues/allowedGW')
-const Invoice = require('./invoice')
+const Invoice = require('../models/invoice')
 
 
 
@@ -18,10 +18,10 @@ const getAllInventory = async (req, res) => {
         // Query all inventories
         const allInventories = await Inventory.find({ user_id });
 
-        // Loop through each inventory
+        // Loop through each inventory to update quantities
         for (const inventory of allInventories) {
             // Query invoices for this inventory
-            const invoicesForInventory = await Invoice.find({ inventory: inventory._id });
+            const invoicesForInventory = await Invoice.find({ inventory });
 
             // Calculate total quantity sold for this inventory
             const totalQuantitySold = invoicesForInventory.reduce((total, invoice) => total + invoice.quantity, 0);
@@ -33,7 +33,10 @@ const getAllInventory = async (req, res) => {
             await inventory.save();
         }
 
-        // Query invoices to find inventories with no associated invoices
+        // Delete inventories with a quantity of 0
+        await Inventory.deleteMany({ qnty: 0 });
+
+        // Query invoices to find inventories with associated invoices
         const invoices = await Invoice.find({ user_id }).distinct('inventory');
         const inventoriesWithInvoices = invoices.map(invoice => invoice.toString());
 
@@ -42,7 +45,6 @@ const getAllInventory = async (req, res) => {
 
         // Send the response with all available inventories
         res.status(200).json({ inventories: availableInventories });
-
     } catch (error) {
         console.error('Error updating inventory quantities:', error);
         res.status(500).json({ error: 'Failed to update inventory quantities' });
@@ -167,8 +169,9 @@ const searchInventories = async (req, res) => {
     const query = req.query.q; // Get the search query from request parameters
 
     try {
+        const user_id = req.user._id
         // Fetch inventory data from your API
-        const response = await Inventory.find({});
+        const response = await Inventory.find({user_id});
 
         // Perform the search
         const results = response.filter(inventory => {

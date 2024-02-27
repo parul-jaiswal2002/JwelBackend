@@ -10,7 +10,7 @@ const getAllEstiamte = async (req, res) => {
 }
 
 const createEstimate = async (req, res) => {
-    const {estimateId ,itemCode, content, weight, rate,total, tagNumber,makingCharges, totalPrice} = req.body;
+    const {estimateId ,itemCode, content, weight, rate,total, makingCharges,totalPrice, tagNumber, image, totalAfterTag, qnty} = req.body;
     try{
 
         const user_id = req.user._id
@@ -19,7 +19,7 @@ const createEstimate = async (req, res) => {
         if (!inventoryExists) {
             return res.status(400).json({ error: "Inventory with the given itemCode does not exist for the user" });
         }
-       const inventory = await Estimate.create({estimateId,itemCode, content, weight, rate,total, tagNumber,makingCharges, totalPrice, user_id});
+       const inventory = await Estimate.create({estimateId ,itemCode, content, weight, rate,total, makingCharges,totalPrice, tagNumber, image, totalAfterTag, qnty, user_id});
  
        res.status(200).json(inventory)
  
@@ -90,9 +90,37 @@ const deleteEstimate = async (req, res) => {
         res.status(200).json("deleted Successfully")
 }
 
+
+
+const searchEstimate = async (req, res) => {
+    const {query}  = req.query // Get the search query from request parameters
+
+    try {
+        const user_id = req.user._id
+        // Fetch inventory data from your API
+        const response = await Estimate.find({user_id});
+         console.log(response)
+        // Perform the search
+        const results = response.filter(estimate => {
+            // Check if the query matches any of the fields in the inventory
+            return (
+                estimate.itemCode.toLowerCase().includes(query.toLowerCase()) ||
+                estimate.tagNumber.toString().includes(query) 
+            );
+        });
+
+        // Return the search results
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching estimate data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports = {
     getAllEstiamte,
     createEstimate,
     editEstimate,
-    deleteEstimate
+    deleteEstimate,
+    searchEstimate
 }

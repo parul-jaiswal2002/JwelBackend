@@ -81,18 +81,18 @@ invoiceSchema.pre('save', async function(next) {
             this.invoiceId = new mongoose.Types.ObjectId().toString();
         }
         const itemDetails = await Inventory.findOne({ itemCode: this.itemCode });
-        let totalPrice = (itemDetails.dia1 * this.rate.dia1)+(itemDetails.dia2* this.rate.dia1)
+        let totalPrice = (itemDetails.dia1 * this.rate.dia1)+(itemDetails.dia2* this.rate.dia2)
                             +(itemDetails.col1W * this.rate.col1W)+(itemDetails.col2W * this.rate.col2W)
                             +(itemDetails.gw * this.rate.gw) + (itemDetails.makingCharges || this.makingCharges)
         
-        
         if(this.qnty > itemDetails.qnty){
-            throw Error('We have this item in less quantity.')
+            throw Error(`We have only ${itemDetails.qnty} items.`)
         }
         if(this.qnty > 1){
             this.totalPrice = this.qnty*totalPrice
         }else{
             this.totalPrice = totalPrice
+        
         }
         //totalPrice after tag number
            let wholeTotal = this.totalPrice +  (this.totalPrice)*(this.tagNumber)/100

@@ -41,10 +41,19 @@ const estimateSchema = new Schema({
         type : Number,
         required : true
     },
+    totalPrice : {
+        type : Number
+    },
     makingCharges : {
         type : Number
     },
-    totalPrice : {
+    image : {
+        type : String
+    },
+    totalAfterTag : {
+        type : Number
+    },
+    qnty : {
         type : Number
     },
     user_id : {
@@ -66,10 +75,19 @@ estimateSchema.pre('save', async function(next) {
                             +(itemDetails.col1W * this.rate.col1W)+(itemDetails.col2W * this.rate.col2W)
                             +(itemDetails.gw * this.rate.gw)+(itemDetails.makingCharges || this.makingCharges)
         
+        if(this.qnty > itemDetails.qnty){
+            throw Error(`We have only ${itemDetails.qnty} items.`)
+        }
+        if(this.qnty > 1){
+            this.totalPrice = this.qnty*totalPrice
+        }else{
+            this.totalPrice = totalPrice
         
+        }
         
         //totalPrice after tag number
-           totalPrice += totalPrice*(this.tagNumber)/100
+        let wholeTotal = this.totalPrice +  (this.totalPrice)*(this.tagNumber)/100
+        this.totalAfterTag = wholeTotal
         // Populate fields if details are found 
         if (itemDetails) {
             this.content = {
@@ -91,7 +109,6 @@ estimateSchema.pre('save', async function(next) {
                 col2W: itemDetails.col2W * this.rate.col2W,
                 gw: itemDetails.gw * this.rate.gw
             };
-            this.totalPrice  = totalPrice
         }
 
         next();

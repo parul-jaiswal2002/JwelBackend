@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAllInvoices,getSingleInvoice, createInvoice, editInvoice,deleteInvoice} = require('../controllers/invoice')
+const {getAllInvoices,createInvoice, editInvoice,deleteInvoice, searchInvoice} = require('../controllers/invoice')
 
 
 //middleware// require auth for all workout routes
@@ -13,7 +13,7 @@ router.use(requireAuth)
 router.get('/', getAllInvoices)
 
 //get a single invoice
-router.get('/:invoiceId', getSingleInvoice)
+// router.get('/:invoiceId', getSingleInvoice)
 //create a invoice
 router.post('/', createInvoice);
 
@@ -22,5 +22,8 @@ router.put('/:invoiceId', editInvoice)
 
 //delete a invoice 
 router.delete('/:invoiceId', deleteInvoice)
+
+//search a invoice
+router.get('/search', searchInvoice)
 
 module.exports = router;

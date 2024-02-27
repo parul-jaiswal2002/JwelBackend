@@ -22,21 +22,34 @@ const getSingleInvoice = async (req, res) => {
 }
 
 const createInvoice = async (req, res) => {
-    const {makerName, grossWeight, invoiceId ,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges,  image,totalAfterTag,qnty} = req.body;
-    try{
-        const user_id = req.user._id
+    const {makerName, grossWeight, invoiceId ,itemCode, content, weight, rate,total,makingCharges, totalPrice, tagNumber,  image,totalAfterTag,qnty} = req.body;
+    try {
+        const user_id = req.user._id;
+
+        // Check if the inventory exists
         const inventoryExists = await Inventory.findOne({ itemCode, user_id });
         if (!inventoryExists) {
             return res.status(400).json({ error: "Inventory with the given itemCode does not exist for the user" });
         }
-       
-        const invoice = await Invoice.create({makerName, grossWeight, invoiceId,itemCode, content, weight, rate,total, tagNumber, totalPrice,makingCharges, image,totalAfterTag, qnty, user_id});
+
+        // Create the invoice
+        const invoice = await Invoice.create({ makerName, grossWeight, invoiceId, itemCode, content, weight, rate, total, makingCharges, totalPrice, tagNumber, image, totalAfterTag, qnty, user_id });
+
+        // Update the inventory quantity
         inventoryExists.qnty -= qnty;
+
+        // Save the updated inventory
         await inventoryExists.save();
-       res.status(200).json(invoice)
-    }
-    catch(error){
-       res.status(400).json({error : error.message})
+
+        // If the inventory quantity is 0, remove it from the database
+        if (inventoryExists.qnty === 0) {
+            await Inventory.findOneAndDelete({ _id: inventoryExists._id });
+        }
+
+        // Send the response
+        res.status(200).json(invoice);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 
 }
@@ -104,11 +117,40 @@ const deleteInvoice = async (req, res) => {
         res.status(200).json("deleted Successfully")
    
 }
+
+
+const searchInvoice = async (req, res) => {
+    const {query}  = req.query // Get the search query from request parameters
+
+    try {
+        const user_id = req.user._id
+        // Fetch inventory data from your API
+        const response = await Invoice.find({user_id});
+         console.log(response)
+        // Perform the search
+        const results = response.filter(invoice => {
+            // Check if the query matches any of the fields in the inventory
+            return (
+                invoice.makerName.toLowerCase().includes(query.toLowerCase()) ||
+                invoice.itemCode.toLowerCase().includes(query.toLowerCase()) ||
+                invoice.grossWeight.toString().includes(query) ||
+                invoice.tagNumber.toString().includes(query) 
+            );
+        });
+
+        // Return the search results
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching invoice data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 module.exports = {
     getAllInvoices,
     getSingleInvoice,
     createInvoice,
     editInvoice,
-    deleteInvoice
+    deleteInvoice,
+    searchInvoice
 
 }

@@ -1,5 +1,5 @@
 const express = require('express');
-const {createEstimate, editEstimate, getAllEstiamte, deleteEstimate} = require('../controllers/estimate')
+const {createEstimate, editEstimate, getAllEstiamte, deleteEstimate, searchEstimate} = require('../controllers/estimate')
 
 
 //middleware// require auth for all workout routes
@@ -18,6 +18,8 @@ router.post('/', createEstimate);
 router.put('/:estimateId', editEstimate)
 
 //delete a estimate
-router.delete('/', deleteEstimate)
+router.delete('/:estimateId', deleteEstimate)
+
+router.get('/search', searchEstimate)
 
 module.exports = router;

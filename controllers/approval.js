@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Approval = require('../models/approval');
 const Inventory = require('../models/inventoryModel');
 
@@ -72,7 +71,38 @@ const createApproval = async (req, res) => {
     }
 };
 
+
+const searchApproval = async (req, res) => {
+    const {query}  = req.query // Get the search query from request parameters
+
+    try {
+        const user_id = req.user._id
+        // Fetch inventory data from your API
+        const response = await Approval.find({user_id});
+         console.log(response)
+        // Perform the search
+        const results = response.filter(approval => {
+            // Check if the query matches any of the fields in the inventory
+            return (
+                approval.partyName.toLowerCase().includes(query.toLowerCase()) ||
+                approval.through.toLowerCase().includes(query.toLowerCase()) ||
+                approval.gst.toString().includes(query) ||
+                approval.products.some(product => product.productName.toLowerCase().includes(query.toLowerCase())) ||
+                approval.products.some(product => product.itemCode.toLowerCase().includes(query.toLowerCase()))
+
+            );
+        });
+
+        // Return the search results
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching invoice data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports = {
     createApproval,
-    getAllApprovals
+    getAllApprovals,
+    searchApproval
 };
