@@ -21,6 +21,7 @@ const preciousStone = require('./routes/stones/preciousStone')
 const semiPrecious = require('./routes/stones/semiPreciousStone')
 const superAdminRouter = require('./routes/superAdmin/superAdmin')
 const comapniesRouter = require('./routes/superAdmin/companies')
+const productionRouter = require('./routes/production/production')
 
 
 //express app
@@ -62,6 +63,9 @@ app.use('/api/invoice', invoiceRouter)
 app.use('/api/inventory/raw-material', rawMatRouter)
 app.use('/api/inventory/precious-stone', preciousStone)
 app.use('/api/inventory/semiPrecious-stone', semiPrecious)
+
+//production
+app.use('/api/user/production', productionRouter)
 
 
 //superAdmin
