@@ -26,7 +26,12 @@ const productionRouter = require('./routes/production/production')
 
 //express app
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: '*', // Allow requests from any origin (you can replace '*' with your frontend URL)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specified methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+    credentials: true // Enable sending cookies across origins if needed
+}));
 //middleware
 app.use(express.json())
 app.use((req, res, next) => {
