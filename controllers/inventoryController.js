@@ -17,34 +17,36 @@ const getAllInventory = async (req, res) => {
     try {
         // Query all inventories
         const allInventories = await Inventory.find({ user_id });
+        res.status(200).json(allInventories)
 
         // Loop through each inventory to update quantities
-        for (const inventory of allInventories) {
-            // Query invoices for this inventory
-            const invoicesForInventory = await Invoice.find({ inventory });
+        // for (const inventory of allInventories) {
+        //     // Query invoices for this inventory
+        //     const invoicesForInventory = await Invoice.find({ inventory });
 
-            // Calculate total quantity sold for this inventory
-            const totalQuantitySold = invoicesForInventory.reduce((total, invoice) => total + invoice.quantity, 0);
+        //     // // Calculate total quantity sold for this inventory
+        //     // const totalQuantitySold = invoicesForInventory.reduce((total, invoice) => total + invoice.quantity, 0);
 
-            // Update the inventory quantity
-            inventory.qnty -= totalQuantitySold;
+        //     // // Update the inventory quantity
+        //     // inventory.qnty -= totalQuantitySold;
 
-            // Save the updated inventory
-            await inventory.save();
-        }
+        //     // // Save the updated inventory
+        //     // await inventory.save();
+        //     res.status(200).json(invoicesForInventory);
+        // }
 
         // Delete inventories with a quantity of 0
-        await Inventory.deleteMany({ qnty: 0 });
+        // await Inventory.deleteMany({ qnty: 0 });
 
-        // Query invoices to find inventories with associated invoices
-        const invoices = await Invoice.find({ user_id }).distinct('inventory');
-        const inventoriesWithInvoices = invoices.map(invoice => invoice.toString());
+        // // Query invoices to find inventories with associated invoices
+        // const invoices = await Invoice.find({ user_id }).distinct('inventory');
+        // const inventoriesWithInvoices = invoices.map(invoice => invoice.toString());
 
-        // Filter inventories without associated invoices
-        const availableInventories = allInventories.filter(inventory => !inventoriesWithInvoices.includes(inventory._id.toString()));
+        // // Filter inventories without associated invoices
+        // const availableInventories = allInventories.filter(inventory => !inventoriesWithInvoices.includes(inventory._id.toString()));
 
-        // Send the response with all available inventories
-        res.status(200).json({ inventories: availableInventories });
+        // // Send the response with all available inventories
+        // res.status(200).json({ inventories: availableInventories });
     } catch (error) {
         console.error('Error updating inventory quantities:', error);
         res.status(500).json({ error: 'Failed to update inventory quantities' });
