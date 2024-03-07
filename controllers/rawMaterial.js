@@ -31,12 +31,12 @@ const getOneRawMaterial = async (req, res) => {
 
 //add one raw material api
 const addRawMaterial = async (req, res) => {
-    const {item,weight} = req.body;
+    const {item,weight, purity} = req.body;
     try{
 
        const user_id = req.user._id //requireauth se
     
-       const rawMaterial = await RawMaterial.create({item, weight, user_id}) //to make it synchronus
+       const rawMaterial = await RawMaterial.create({item, weight, purity, user_id}) //to make it synchronus
        res.status(200).json(rawMaterial) 
     }
     catch(error){
@@ -52,7 +52,7 @@ const editRawMaterial = async (req, res) => {
     }
 
     // Extract the fields from the request body
-    const { item, weight,  ...updatedFields } = req.body;
+    const { item, weight,purity,  ...updatedFields } = req.body;
 
     try {
        
@@ -60,7 +60,7 @@ const editRawMaterial = async (req, res) => {
         // Update the inventory item
         const inventory = await RawMaterial.findOneAndUpdate(
             { _id: id },
-            { ...updatedFields, item, weight},
+            { ...updatedFields, item, weight, purity},
             { new: true }
         );
 
@@ -102,7 +102,8 @@ const searchRawMaterial = async (req, res) => {
             // Check if the query matches any of the fields in the inventory
             return (
                 inventory.item.toLowerCase().includes(query.toLowerCase()) ||
-                inventory.weight.toString().includes(query)
+                inventory.weight.toString().includes(query) ||
+                inventory.purity.toString().includes(query)
             );
         });
 
